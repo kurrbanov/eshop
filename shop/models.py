@@ -18,6 +18,12 @@ class Product(models.Model):
 
     objects = ProductManager()
 
+    class Meta:
+        db_table = 'product'
+        indexes = [models.Index(fields=['title'])]
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+
 
 class ProductImage(models.Model):
     image = models.ImageField()
