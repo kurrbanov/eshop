@@ -19,11 +19,12 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from shop.views import main_page
+from shop.views import main_page, register_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main_page, name="main-page"),
+    path('register/', register_page, name="register-page"),
 ]
 
 if settings.DEBUG:
