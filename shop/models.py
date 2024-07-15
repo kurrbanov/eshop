@@ -29,7 +29,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    image = models.ImageField(verbose_name="Изображение")
+    image = models.ImageField(upload_to="media", verbose_name="Изображение")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
 
     class Meta:

@@ -6,15 +6,15 @@ from shop.models import (
     Attribute,
 )
 
-# Register your models here.
 
-# admin.site.register(Product)
-# admin.site.register(ProductImage)
-# admin.site.register(Attribute)
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductImageInline]
     list_display = ('title', 'price', 'stock', 'images', 'get_attributes')
 
     @admin.display(description='Фото товара')
@@ -32,7 +32,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ('image', 'product')
+    list_display = ('id', 'image', 'product')
 
 
 @admin.register(Attribute)
