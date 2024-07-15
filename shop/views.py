@@ -3,21 +3,26 @@ from django.http import HttpRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.views import View
+from django.views.generic import ListView
 
 from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
 
 
-def main_page(request: HttpRequest):
-    products = Product.objects.all()
-    return render(
-        request,
-        "index.html",
-        context={
-            "products": products,
-            "is_authenticated": request.user.is_authenticated,
-        },
-    )
+class MainView(ListView):
+    template_name = 'index.html'
+    model = Product
+    context_object_name = 'products'
+    ordering = ['-title']
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.prefetch_related("productimage_set")
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data["is_authenticated"] = self.request.user.is_authenticated
+        return data
 
 
 def register_page(request: HttpRequest):
