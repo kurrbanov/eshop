@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.views import View
 
 from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
@@ -34,10 +35,15 @@ def register_page(request: HttpRequest):
     )
 
 
-def login_page(request: HttpRequest):
-    if request.method == "POST":
+class LoginView(View):
+    @staticmethod
+    def get(request: HttpRequest):
+        form = UserAuthForm()
+        return render(request, "login.html", context={"form": form})
+
+    @staticmethod
+    def post(request: HttpRequest):
         form = UserAuthForm(request.POST)
-        print(f"{request.POST=}")
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
@@ -51,8 +57,8 @@ def login_page(request: HttpRequest):
         else:
             messages.error(request, form.errors)
 
-    form = UserAuthForm()
-    return render(request, "login.html", context={"form": form})
+        form = UserAuthForm()
+        return render(request, "login.html", context={"form": form})
 
 
 def logout_page(request: HttpRequest):
