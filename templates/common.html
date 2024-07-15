@@ -20,12 +20,12 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       </ul>
-      <form class="d-flex">
-          {% if is_authenticated %}
-            <button class="btn btn-outline-danger" type="submit">Выйти</button>
-          {% else %}
-            <button class="btn btn-outline-success" type="submit">Войти</button>
-          {% endif %}
+      {% if is_authenticated %}
+      <form class="d-flex" method="GET" action="{% url 'logout' %}">
+          <button class="btn btn-outline-danger" type="submit">Выйти</button>
+      {% else %}
+          <a type="button" class="btn btn-outline-success" href="{% url 'login-page' %}">Войти</a>
+      {% endif %}
       </form>
     </div>
   </div>
