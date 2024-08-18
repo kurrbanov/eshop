@@ -7,9 +7,10 @@ from django.views.generic import ListView, DetailView
 
 from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
+from shop.mixins import IsAuthenticatedMixin
 
 
-class MainView(ListView):
+class MainView(IsAuthenticatedMixin, ListView):
     template_name = 'index.html'
     model = Product
     context_object_name = 'products'
@@ -18,11 +19,6 @@ class MainView(ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.prefetch_related("productimage_set")
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["is_authenticated"] = self.request.user.is_authenticated
-        return data
 
 
 def register_page(request: HttpRequest):
@@ -71,7 +67,7 @@ def logout_page(request: HttpRequest):
     return redirect("main-page")
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(IsAuthenticatedMixin, DetailView):
     model = Product
     template_name = 'product_detail.html'
     context_object_name = 'product'
