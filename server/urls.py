@@ -19,7 +19,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from shop.views import MainView, register_page, logout_page, LoginView, ProductDetailView
+from shop.views import (
+    MainView,
+    register_page,
+    logout_page,
+    LoginView,
+    ProductDetailView,
+    CartView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +35,7 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login-page"),
     path("logout/", logout_page, name="logout"),
     path("products/<int:pk>", ProductDetailView.as_view(), name="product-detail"),
+    path("cart/", CartView.as_view(), name="cart"),
 ]
 
 if settings.DEBUG:

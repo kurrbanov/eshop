@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.views import View
 from django.views.generic import ListView, DetailView
+from django.http.response import JsonResponse
 
 from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
@@ -75,3 +76,18 @@ class ProductDetailView(IsAuthenticatedMixin, DetailView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.prefetch_related("productimage_set")
+
+
+class CartView(View):
+    @staticmethod
+    def post(request: HttpRequest):
+        """
+        {
+            productId: 123,
+        }
+
+        :param request:
+        :return:
+        """
+        print(f"{request.body.decode('utf-8')=}")
+        return JsonResponse({"success": True})
