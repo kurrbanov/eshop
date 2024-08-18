@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
@@ -69,3 +69,13 @@ class LoginView(View):
 def logout_page(request: HttpRequest):
     logout(request)
     return redirect("main-page")
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'product_detail.html'
+    context_object_name = 'product'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.prefetch_related("productimage_set")
