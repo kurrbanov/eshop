@@ -28,6 +28,8 @@
 
            const csrftoken = getCookie('csrftoken');
 
+           console.log(csrftoken)
+
            toCartBtn.onclick = function (event) {
                fetch(`{% url "cart" %}`, {
                    method: 'POST',

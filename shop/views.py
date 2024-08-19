@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.http.response import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 
 from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
@@ -68,6 +70,7 @@ def logout_page(request: HttpRequest):
     return redirect("main-page")
 
 
+@method_decorator(ensure_csrf_cookie, name="dispatch")
 class ProductDetailView(IsAuthenticatedMixin, DetailView):
     model = Product
     template_name = 'product_detail.html'
