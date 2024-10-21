@@ -36,6 +36,7 @@ urlpatterns = [
     path("logout/", logout_page, name="logout"),
     path("products/<int:pk>", ProductDetailView.as_view(), name="product-detail"),
     path("cart/", CartView.as_view(), name="cart"),
+    path("cart/<int:product_id>", CartView.as_view(), name="cart"),
 ]
 
 if settings.DEBUG:

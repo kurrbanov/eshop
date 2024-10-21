@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib.auth import login, authenticate, logout
@@ -83,14 +85,61 @@ class ProductDetailView(IsAuthenticatedMixin, DetailView):
 
 class CartView(View):
     @staticmethod
+    def get(request: HttpRequest, product_id: int):
+        cart = request.session.get("cart")
+
+        print(f"123{cart=}")
+
+        if cart is None:
+            return JsonResponse({"detail": "Cart doesn't exists."}, status=404)
+
+        if str(product_id) not in cart:
+            return JsonResponse({"detail": "Product not in cart."}, status=404)
+
+        return JsonResponse({"quantity": cart[str(product_id)]}, status=200)
+
+    @staticmethod
     def post(request: HttpRequest):
         """
+
         {
-            productId: 123,
+            "productId": 1,
+            "quantity": 2,
         }
 
         :param request:
         :return:
         """
-        print(f"{request.body.decode('utf-8')=}")
+
+        data = json.loads(request.body.decode('utf-8'))
+
+        product_id = data["productId"]
+        quantity = data["quantity"]
+
+        cart = request.session.get("cart")
+
+        if cart is None:
+            cart = {}
+
+        if str(product_id) not in cart:
+            cart[str(product_id)] = quantity
+        else:
+            cart[str(product_id)] += quantity
+
+        request.session.update({"cart": cart})
+
         return JsonResponse({"success": True})
+
+    @staticmethod
+    def delete(request: HttpRequest, product_id: int):
+        cart = request.session.get("cart")
+
+        if cart is None:
+            return JsonResponse({"detail": "Cart doesn't exists."}, status=404)
+
+        if str(product_id) not in cart:
+            return JsonResponse({"detail": "Product not in cart."}, status=404)
+
+        del cart[str(product_id)]
+        request.session.update({"cart": cart})
+        return JsonResponse({}, status=204)
